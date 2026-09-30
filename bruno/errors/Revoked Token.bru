@@ -1,0 +1,25 @@
+meta {
+  name: Revoked Token
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/new
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{expiringToken}}
+}
+
+body:json {
+  { "url": "https://example.com/" }
+}
+tests {
+  test("401 unauthorized", function () {
+    expect(res.getStatus()).to.equal(401);
+    expect(res.getBody().error.code).to.equal("unauthorized");
+  });
+}

@@ -1,0 +1,31 @@
+meta {
+  name: 03 Get Token (expiring)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/user/token
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "{{username}}",
+    "password": "{{password}}",
+    "expires_in": 60
+  }
+}
+
+script:post-response {
+  bru.setVar("expiringToken", res.getBody().token);
+}
+
+tests {
+  test("201 with expires_at about 60s out", function () {
+    expect(res.getStatus()).to.equal(201);
+    const now = Math.floor(Date.now() / 1000);
+    expect(res.getBody().expires_at).to.be.within(now + 55, now + 65);
+  });
+}

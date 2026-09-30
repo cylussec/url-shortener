@@ -1,0 +1,42 @@
+meta {
+  name: 06 Shorten Trailing Slash
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/new
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "url": "https://slash.example"
+  }
+}
+
+script:pre-request {
+  const res = await bru.sendRequest({
+    method: "POST",
+    url: bru.getEnvVar("baseUrl") + "/api/new",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + bru.getVar("token"),
+    },
+    data: { url: "https://slash.example/" },
+  });
+  bru.setVar("slashCode", res.data.code);
+}
+
+tests {
+  test("https://x and https://x/ share a code", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().code).to.equal(bru.getVar("slashCode"));
+    expect(res.getBody().original_url).to.equal("https://slash.example/");
+  });
+}
