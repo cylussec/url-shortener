@@ -1,0 +1,22 @@
+meta {
+  name: 07 Read
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/read/{{code}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("200 with the stored URL", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().code).to.equal(bru.getVar("code"));
+    expect(res.getBody().original_url).to.equal(
+      "https://example.com/bruno?run=" + bru.getVar("username"),
+    );
+    expect(res.getBody().created_at).to.be.a("number");
+  });
+}

@@ -1,0 +1,25 @@
+meta {
+  name: Relative URL
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/api/new
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  { "url": "hello" }
+}
+tests {
+  test("400 invalid_url", function () {
+    expect(res.getStatus()).to.equal(400);
+    expect(res.getBody().error.code).to.equal("invalid_url");
+  });
+}

@@ -1,0 +1,35 @@
+meta {
+  name: 04 Shorten URL
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/new
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "url": "https://example.com/bruno?run={{username}}"
+  }
+}
+
+script:post-response {
+  bru.setVar("code", res.getBody().code);
+}
+
+tests {
+  test("201 with a 9-char code", function () {
+    expect(res.getStatus()).to.equal(201);
+    const body = res.getBody();
+    expect(body.code).to.match(/^[A-Za-z0-9]{9}$/);
+    expect(body.short_url.endsWith("/" + body.code)).to.equal(true);
+    expect(body.original_url).to.equal("https://example.com/bruno?run=" + bru.getVar("username"));
+  });
+}

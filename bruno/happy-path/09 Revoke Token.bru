@@ -1,0 +1,21 @@
+meta {
+  name: 09 Revoke Token
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{baseUrl}}/api/user/token
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{expiringToken}}
+}
+
+tests {
+  test("204", function () {
+    expect(res.getStatus()).to.equal(204);
+  });
+}

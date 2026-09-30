@@ -1,0 +1,19 @@
+meta {
+  name: Unknown Code
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/api/read/ZZZZZZZZZ
+  body: none
+  auth: none
+}
+
+
+tests {
+  test("404 not_found", function () {
+    expect(res.getStatus()).to.equal(404);
+    expect(res.getBody().error.code).to.equal("not_found");
+  });
+}

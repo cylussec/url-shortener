@@ -1,0 +1,28 @@
+meta {
+  name: 05 Shorten Same URL
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/new
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "url": "https://example.com/bruno?run={{username}}"
+  }
+}
+
+tests {
+  test("200 with the same code", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().code).to.equal(bru.getVar("code"));
+  });
+}

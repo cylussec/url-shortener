@@ -1,0 +1,25 @@
+meta {
+  name: Bad Scheme
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/api/new
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  { "url": "javascript:alert(1)" }
+}
+tests {
+  test("400 invalid_url", function () {
+    expect(res.getStatus()).to.equal(400);
+    expect(res.getBody().error.code).to.equal("invalid_url");
+  });
+}
